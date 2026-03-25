@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Frost Haulage | Planner Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        :root { --fts-red: #E62411; --wa-green: #25D366; }
+        
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: url('Pic-35-1.jpg'); 
+            background-repeat: no-repeat;
+            background-size: cover;
+            background-position: center center;
+            opacity: 0.3;
+            z-index: -1;
+        }
+
+        body { 
+            margin: 0; 
+            font-family: -apple-system, system-ui, sans-serif; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            padding-top: 70px; 
+        }
+        
+        /* SIDEBAR */
+        #sideMenu { height: 100%; width: 0; position: fixed; z-index: 9999; top: 0; left: 0; background-color: var(--fts-red); overflow-x: hidden; transition: 0.3s; padding-top: 50px; box-shadow: 5px 0 15px rgba(0,0,0,0.3); }
+        #sideMenu a, .drop-btn { padding: 10px 20px; text-decoration: none; font-size: 15px; color: white !important; display: block; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: 600; cursor: pointer; background: none; border: none; width: 100%; text-align: left; box-sizing: border-box; line-height: 1.2; }
+        .drop-container { display: none; background: rgba(0,0,0,0.2); }
+        .driver-row { display: flex; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .driver-name { flex-grow: 1; padding: 10px 20px; color: white; text-decoration: none; font-size: 14px; }
+        .wa-side-btn { padding: 10px; color: #fff; background: rgba(255,255,255,0.1); text-decoration: none; font-size: 18px; border-left: 1px solid rgba(255,255,255,0.1); }
+        #menuBtn { position: fixed; top: 15px; left: 15px; font-size: 26px; background: white; border: 1px solid #ddd; padding: 4px 12px; border-radius: 8px; cursor: pointer; z-index: 1000; color: var(--fts-red); line-height: 1; }
+
+        .logo { max-width: 200px; margin-bottom: 20px; mix-blend-mode: multiply; }
+
+        /* LIVE FEED GRID */
+        #feedWrapper { width: 95%; max-width: 1400px; margin-top: 10px; }
+        .feed-header { background: #1a202c; color: white; padding: 12px; border-radius: 12px 12px 0 0; font-size: 13px; font-weight: 900; display: flex; justify-content: space-between; align-items: center; letter-spacing: 1px; }
+        
+        #plannerQuoteList { 
+            background: rgba(255, 255, 255, 0.85); 
+            border: 1px solid #ccc; 
+            border-top: none; 
+            border-radius: 0 0 12px 12px; 
+            padding: 20px; 
+            min-height: 400px; 
+            max-height: 75vh; 
+            overflow-y: auto; 
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            align-content: start;
+        }
+        
+        /* QUOTE CARDS */
+        .quote-card { 
+            background: white; 
+            border-radius: 10px; 
+            padding: 18px; 
+            border-left: 6px solid #1a202c; 
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); 
+            animation: slideIn 0.4s ease-out; 
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        /* CARD BODY TRANSITION */
+        .card-body { 
+            max-height: 1000px; /* Large value to allow expansion */
+            transition: max-height 0.3s ease-in-out;
+        }
+
+        /* CLASS TO HIDE */
+        .quote-card.is-collapsed .card-body { 
+            max-height: 0; 
+            padding: 0;
+            margin: 0;
+            opacity: 0;
+        }
+
+        .new-entry { border-left-color: var(--fts-red); animation: pulseRed 2s infinite; }
+        
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(230, 36, 17, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(230, 36, 17, 0); } 100% { box-shadow: 0 0 0 0 rgba(230, 36, 17, 0); } }
+
+        .job-label { font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; margin-bottom: 2px; display: block; }
+        .job-text { font-size: 12px; font-weight: 700; color: #1e293b; text-transform: uppercase; margin-bottom: 12px; }
+        
+        .contact-link { text-decoration: none; font-size: 11px; font-weight: 700; color: #64748b; margin-right: 10px; }
+        .copy-btn { background: #f1f5f9; border: none; padding: 2px 6px; border-radius: 4px; cursor: pointer; font-size: 9px; color: #64748b; }
+
+        .grid-loader { grid-column: 1 / -1; text-align: center; color: #94a3b8; padding: 50px 20px; font-size: 13px; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div id="menuBtn" onclick="openNav()">☰</div>
+
+    <div id="sideMenu">
+        <a href="https://docs.google.com/spreadsheets/d/1nmFkiesEvKW4LfL7q-VH5_WlM67_x0aG5DkTvR5jESE/preview?rm=minimal" target="_blank">Vehicle Maintenance Calendar</a>
+        <a href="https://docs.google.com/spreadsheets/d/1nZvQOplnru5hUCy4VRmm7bVHOwuJyzvV4CD3DyDGmO0/preview?rm=minimal" target="_blank">Trailer Locator</a> 
+        <a href="https://docs.google.com/spreadsheets/d/1tDW99JVE3BA7tKytZJGXA8EmkFDK1JHpiemg_Azxm6Q/preview?rm=minimal" target="_blank">Holiday Planner</a>
+        <a href="https://www.webfleet.com/en_gb/webfleet/products/webfleet/" target="_blank">Webfleet Login</a>
+        <a href="https://palletforce.net/Login.aspx" target="_blank">PalletForce</a>
+        <a href="https://haulageexchange.co.uk/" target="_blank">Haulage Exchange</a>
+        <a href="https://www.frosttransportsolutions.co.uk/" target="_blank">Company Website</a>
+
+        <div class="drop-btn" onclick="toggleDrop()">Driver Contacts ▾</div>
+        <div id="driverList" class="drop-container">
+            </div>
+        <div onclick="closeNav()" style="padding: 20px; color: white; cursor: pointer; text-align: center; text-decoration: underline; font-size: 13px;">✕ Close Menu</div>
+    </div>
+
+    <img src="logo.png" class="logo" alt="Frost Haulage">
+
+    <div id="feedWrapper">
+        <div class="feed-header">
+            <span><i class="fa-solid fa-satellite-dish mr-2"></i> LIVE DISPATCH FEED</span>
+            <span id="liveStatus" style="font-size: 9px; color: #4ade80;">ONLINE</span>
+        </div>
+        <div id="plannerQuoteList">
+            <div id="loadingMsg" class="grid-loader">
+                <i class="fa-solid fa-spinner fa-spin mb-3"></i><br>CONNECTING TO SUPABASE...
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const _URL = "https://tdrzytgiqvdulityqttr.supabase.co";
+        const _KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRkcnp5dGdpcXZkdWxpdHlxdHRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNTM5NTMsImV4cCI6MjA4ODcyOTk1M30.XN46i7u6STD-2afmN7-Jh1MltADGpEuWlLt_n7wknbA";
+        const sb = supabase.createClient(_URL, _KEY);
+
+        function openNav() { document.getElementById("sideMenu").style.width = "260px"; }
+        function closeNav() { 
+            document.getElementById("sideMenu").style.width = "0"; 
+            document.getElementById("driverList").style.display = "none";
+        }
+        function toggleDrop() {
+            var d = document.getElementById("driverList");
+            d.style.display = (d.style.display === "block") ? "none" : "block";
+        }
+
+        function copyAddress(e, text) {
+            e.stopPropagation(); 
+            navigator.clipboard.writeText(text);
+            alert("Copied!");
+        }
+
+        function renderQuote(quote, isNew = false) {
+            const list = document.getElementById('plannerQuoteList');
+            const loader = document.getElementById('loadingMsg');
+            if (loader) loader.remove();
+
+            const card = document.createElement('div');
+            // Change 'is-collapsed' to '' if you want them open by default
+            card.className = `quote-card ${isNew ? 'new-entry' : ''}`;
+            
+            // Toggle Logic
+            card.onclick = function() {
+                this.classList.toggle('is-collapsed');
+            };
+
+            const price = quote.total_price ? Number(quote.total_price).toFixed(2) : '0.00';
+            const time = new Date(quote.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                        <div>
+                            <span style="font-size:9px; font-weight:900; background:var(--fts-red); color:white; padding:2px 6px; border-radius:3px;">${quote.vehicle_type}</span>
+                            <h4 style="margin:8px 0 2px 0; font-weight:900; text-transform:uppercase; color:#1e293b; font-size:15px;">${quote.customer_name}</h4>
+                        </div>
+                        <div style="text-align:right;">
+                            <span style="font-size:16px; font-weight:900; color:#1e293b;">£${price}</span>
+                        </div>
+                    </div>
+                    <div style="margin: 5px 0 10px 0; display: flex; gap: 10px; font-size: 10px; color: #94a3b8; font-weight: 800; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;">
+                        <span>REF: ${quote.reference || 'N/A'}</span>
+                        <span><i class="fa-solid fa-clock"></i> ${time}</span>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div style="margin-bottom: 12px; display: flex;">
+                        ${quote.customer_phone ? `<a href="tel:${quote.customer_phone}" class="contact-link" onclick="event.stopPropagation()"><i class="fa-solid fa-phone" style="color:var(--fts-red)"></i> CALL</a>` : ''}
+                        ${quote.customer_email ? `<a href="mailto:${quote.customer_email}" class="contact-link" onclick="event.stopPropagation()"><i class="fa-solid fa-envelope"></i> EMAIL</a>` : ''}
+                    </div>
+
+                    <span class="job-label">Collection</span>
+                    <p class="job-text">${quote.pickup}</p>
+                    
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <span class="job-label">Delivery</span>
+                        <button class="copy-btn" onclick="copyAddress(event, '${quote.delivery.replace(/'/g, "\\'")}')">COPY</button>
+                    </div>
+                    <p class="job-text" style="margin-bottom:5px;">${quote.delivery}</p>
+                </div>
+            `;
+            
+            list.insertBefore(card, list.firstChild);
+            
+            if(isNew) {
+                new Audio('https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3').play().catch(e => {});
+            }
+        }
+
+        async function initLiveFeed() {
+            console.log("Initializing Supabase...");
+            try {
+                const { data, error } = await sb.from('quotes').select('*').order('created_at', { ascending: false }).limit(24);
+                
+                if (error) {
+                    console.error("Fetch error:", error);
+                    document.getElementById('plannerQuoteList').innerHTML = `<div class="grid-loader" style="color:red">ERROR: ${error.message}</div>`;
+                    return;
+                }
+
+                console.log("Data received:", data);
+                if (data && data.length > 0) {
+                    data.reverse().forEach(q => renderQuote(q, false));
+                } else {
+                    document.getElementById('plannerQuoteList').innerHTML = '<div class="grid-loader">NO QUOTES FOUND</div>';
+                }
+
+                // Subscription
+                sb.channel('any').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'quotes' }, payload => {
+                    renderQuote(payload.new, true);
+                }).subscribe();
+
+            } catch (err) {
+                console.error("Critical error:", err);
+            }
+        }
+
+        window.onload = initLiveFeed;
+    </script>
+</body>
+</html>
