@@ -33,7 +33,7 @@
             background-color: #f4f7f6;
         }
         
-        /* SIDEBAR (FULL DRIVER LIST RESTORED) */
+        /* SIDEBAR & DRIVER LIST */
         #sideMenu { height: 100%; width: 0; position: fixed; z-index: 9999; top: 0; left: 0; background-color: var(--fts-red); overflow-x: hidden; transition: 0.3s; padding-top: 50px; box-shadow: 5px 0 15px rgba(0,0,0,0.3); }
         #sideMenu a, .drop-btn { padding: 12px 20px; text-decoration: none; font-size: 14px; color: white !important; display: block; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: 600; cursor: pointer; background: none; border: none; width: 100%; text-align: left; box-sizing: border-box; }
         .drop-container { display: none; background: rgba(0,0,0,0.2); max-height: 60vh; overflow-y: auto; }
@@ -58,7 +58,7 @@
             align-content: start;
         }
         
-        /* QUOTE CARDS - CLEAN DESIGN */
+        /* QUOTE CARDS */
         .quote-card { 
             background: white; border-radius: 10px; padding: 15px; 
             border-left: 6px solid #1a202c; box-shadow: 0 2px 8px rgba(0,0,0,0.08); 
@@ -70,7 +70,7 @@
         /* COLLAPSIBLE LOGIC */
         .card-details { 
             max-height: 0; opacity: 0; overflow: hidden; 
-            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease, padding 0.3s ease;
+            transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
         }
         .quote-card.is-expanded .card-details { 
             max-height: 800px; opacity: 1; padding-top: 15px; border-top: 1px solid #eee; margin-top: 12px;
@@ -82,9 +82,7 @@
         .job-label { font-size: 9px; font-weight: 900; color: #94a3b8; text-transform: uppercase; margin-bottom: 2px; display: block; }
         .job-text { font-size: 12px; font-weight: 700; color: #1e293b; text-transform: uppercase; margin-bottom: 12px; line-height: 1.4; }
         
-        .contact-link { text-decoration: none; font-size: 11px; font-weight: 700; color: #64748b; margin-right: 15px; }
         .copy-btn { background: #f1f5f9; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 9px; color: #64748b; font-weight: 800; }
-
         .grid-loader { grid-column: 1 / -1; text-align: center; color: #94a3b8; padding: 50px; font-weight: bold; }
     </style>
 </head>
@@ -166,39 +164,44 @@
 
             const card = document.createElement('div');
             card.className = `quote-card ${isNew ? 'new-entry' : ''}`;
-            
-            // Toggle expansion
             card.onclick = function() { this.classList.toggle('is-expanded'); };
 
             const price = quote.total_price ? Number(quote.total_price).toFixed(2) : '0.00';
             const time = new Date(quote.created_at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' });
 
             card.innerHTML = `
-                <div style="display:flex; justify-content:space-between; align-items:center;">
-                    <div style="max-width: 70%;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div style="max-width: 75%;">
                         <span style="font-size:8px; font-weight:900; background:#1a202c; color:white; padding:2px 5px; border-radius:3px; text-transform:uppercase;">${quote.vehicle_type}</span>
-                        <h4 style="margin:5px 0 0 0; font-weight:900; text-transform:uppercase; color:#1e293b; font-size:14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${quote.customer_name}</h4>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+                            <h4 style="margin:0; font-weight:900; text-transform:uppercase; color:#1e293b; font-size:14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">
+                                ${quote.customer_name}
+                            </h4>
+                            <div style="display: flex; gap: 10px; border-left: 1px solid #ddd; padding-left: 10px;">
+                                ${quote.customer_phone ? `
+                                    <a href="tel:${quote.customer_phone}" onclick="event.stopPropagation()" style="text-decoration:none; color:var(--fts-red); font-size:13px;">
+                                        <i class="fa-solid fa-phone"></i>
+                                    </a>` : ''}
+                                ${quote.customer_email ? `
+                                    <a href="mailto:${quote.customer_email}" onclick="event.stopPropagation()" style="text-decoration:none; color:#64748b; font-size:13px;">
+                                        <i class="fa-solid fa-envelope"></i>
+                                    </a>` : ''}
+                            </div>
+                        </div>
                     </div>
                     <div style="text-align:right;">
-                        <span style="font-size:16px; font-weight:900; color:var(--fts-red);">£${price}</span>
+                        <span style="font-size:16px; font-weight:900; color:#1e293b;">£${price}</span>
                     </div>
                 </div>
 
                 <div class="card-details">
-                    <div style="margin-bottom: 15px; display: flex; gap: 10px;">
-                        ${quote.customer_phone ? `<a href="tel:${quote.customer_phone}" class="contact-link" onclick="event.stopPropagation()"><i class="fa-solid fa-phone"></i> CALL</a>` : ''}
-                        ${quote.customer_email ? `<a href="mailto:${quote.customer_email}" class="contact-link" onclick="event.stopPropagation()"><i class="fa-solid fa-envelope"></i> EMAIL</a>` : ''}
-                    </div>
-
-                    <span class="job-label">Reference / Time</span>
-                    <p class="job-text" style="font-size:10px; color:#64748b;">${quote.reference || 'NO REF'} | Received: ${time}</p>
-
+                    <span class="job-label">Reference / Received</span>
+                    <p class="job-text" style="font-size:11px; color:#64748b;">${quote.reference || 'NO REF'} | ${time}</p>
                     <span class="job-label">Collection</span>
                     <p class="job-text">${quote.pickup}</p>
-                    
                     <div style="display:flex; justify-content:space-between; align-items:center;">
                         <span class="job-label">Delivery</span>
-                        <button class="copy-btn" onclick="copyAddress(event, '${quote.delivery.replace(/'/g, "\\'")}')">COPY</button>
+                        <button class="copy-btn" onclick="copyAddress(event, '${quote.delivery.replace(/'/g, "\\'")}')">COPY ADDRESS</button>
                     </div>
                     <p class="job-text" style="margin-bottom:0;">${quote.delivery}</p>
                 </div>
@@ -216,7 +219,7 @@
                     data.reverse().forEach(q => renderQuote(q, false));
                 }
                 sb.channel('realtime-quotes').on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'quotes' }, p => renderQuote(p.new, true)).subscribe();
-            } catch (e) { console.log(e); }
+            } catch (e) { console.error(e); }
         }
 
         window.onload = initLiveFeed;
