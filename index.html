@@ -8,7 +8,7 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     
     <style>
-        :root { --fts-red: #E62411; --wa-green: #25D366; }
+        :root { --fts-red: #E62411; --wa-green: #25D366; --ack-blue: #3b82f6; }
         
         body::before {
             content: "";
@@ -33,7 +33,7 @@
             background-color: #f4f7f6;
         }
         
-        /* SIDEBAR & DRIVER LIST */
+        /* SIDEBAR */
         #sideMenu { height: 100%; width: 0; position: fixed; z-index: 9999; top: 0; left: 0; background-color: var(--fts-red); overflow-x: hidden; transition: 0.3s; padding-top: 50px; box-shadow: 5px 0 15px rgba(0,0,0,0.3); }
         #sideMenu a, .drop-btn { padding: 12px 20px; text-decoration: none; font-size: 14px; color: white !important; display: block; border-bottom: 1px solid rgba(255,255,255,0.1); font-weight: 600; cursor: pointer; background: none; border: none; width: 100%; text-align: left; box-sizing: border-box; }
         .drop-container { display: none; background: rgba(0,0,0,0.2); max-height: 60vh; overflow-y: auto; }
@@ -76,6 +76,7 @@
             max-height: 800px; opacity: 1; padding-top: 15px; border-top: 1px solid #eee; margin-top: 12px;
         }
 
+        /* PULSE ANIMATION */
         .new-entry { border-left-color: var(--fts-red); animation: pulseRed 2s infinite; }
         @keyframes pulseRed { 0% { box-shadow: 0 0 0 0 rgba(230, 36, 17, 0.4); } 70% { box-shadow: 0 0 0 10px rgba(230, 36, 17, 0); } 100% { box-shadow: 0 0 0 0 rgba(230, 36, 17, 0); } }
 
@@ -83,6 +84,9 @@
         .job-text { font-size: 12px; font-weight: 700; color: #1e293b; text-transform: uppercase; margin-bottom: 12px; line-height: 1.4; }
         
         .copy-btn { background: #f1f5f9; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 9px; color: #64748b; font-weight: 800; }
+        .ack-btn { background: none; border: none; padding: 0; cursor: pointer; color: var(--wa-green); font-size: 16px; margin-left: 5px; display: none; }
+        .new-entry .ack-btn { display: inline-block; } /* Only show tick on new entries */
+
         .grid-loader { grid-column: 1 / -1; text-align: center; color: #94a3b8; padding: 50px; font-weight: bold; }
     </style>
 </head>
@@ -157,6 +161,13 @@
             alert("Address Copied!");
         }
 
+        function acknowledgeCard(e, btn) {
+            e.stopPropagation();
+            const card = btn.closest('.quote-card');
+            card.classList.remove('new-entry');
+            btn.style.display = 'none'; // Hide the tick once clicked
+        }
+
         function renderQuote(quote, isNew = false) {
             const list = document.getElementById('plannerQuoteList');
             const loader = document.getElementById('loadingMsg');
@@ -171,13 +182,13 @@
 
             card.innerHTML = `
                 <div style="display:flex; justify-content:space-between; align-items:flex-start;">
-                    <div style="max-width: 75%;">
+                    <div style="max-width: 80%;">
                         <span style="font-size:8px; font-weight:900; background:#1a202c; color:white; padding:2px 5px; border-radius:3px; text-transform:uppercase;">${quote.vehicle_type}</span>
-                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 5px;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-top: 5px;">
                             <h4 style="margin:0; font-weight:900; text-transform:uppercase; color:#1e293b; font-size:14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 140px;">
                                 ${quote.customer_name}
                             </h4>
-                            <div style="display: flex; gap: 10px; border-left: 1px solid #ddd; padding-left: 10px;">
+                            <div style="display: flex; align-items: center; gap: 8px; border-left: 1px solid #ddd; padding-left: 8px;">
                                 ${quote.customer_phone ? `
                                     <a href="tel:${quote.customer_phone}" onclick="event.stopPropagation()" style="text-decoration:none; color:var(--fts-red); font-size:13px;">
                                         <i class="fa-solid fa-phone"></i>
@@ -186,6 +197,9 @@
                                     <a href="mailto:${quote.customer_email}" onclick="event.stopPropagation()" style="text-decoration:none; color:#64748b; font-size:13px;">
                                         <i class="fa-solid fa-envelope"></i>
                                     </a>` : ''}
+                                <button class="ack-btn" onclick="acknowledgeCard(event, this)" title="Acknowledge Quote">
+                                    <i class="fa-solid fa-circle-check"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -197,10 +211,10 @@
                 <div class="card-details">
                     <span class="job-label">Reference / Received</span>
                     <p class="job-text" style="font-size:11px; color:#64748b;">${quote.reference || 'NO REF'} | ${time}</p>
-                    <span class="job-label">Collection</span>
+                    <span class="job-label">Collection Point</span>
                     <p class="job-text">${quote.pickup}</p>
                     <div style="display:flex; justify-content:space-between; align-items:center;">
-                        <span class="job-label">Delivery</span>
+                        <span class="job-label">Delivery Point</span>
                         <button class="copy-btn" onclick="copyAddress(event, '${quote.delivery.replace(/'/g, "\\'")}')">COPY ADDRESS</button>
                     </div>
                     <p class="job-text" style="margin-bottom:0;">${quote.delivery}</p>
