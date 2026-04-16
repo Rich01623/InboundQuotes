@@ -87,12 +87,12 @@
         .history-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 15px; margin-top: 20px; }
     </style>
 </head>
-<body>
+<body onclick="enableAudio()">
 
     <div id="menuBtn" onclick="openNav()">☰</div>
 
     <div id="sideMenu">
-        <a href="javascript:void(0)" onclick="openHistory()">📜 View History / Deleted</a>
+        <a href="javascript:void(0)" onclick="openHistory()"><i class="fa-solid fa-clock-rotate-left"></i> View History / Deleted</a>
         <a href="https://docs.google.com/spreadsheets/d/1nmFkiesEvKW4LfL7q-VH5_WlM67_x0aG5DkTvR5jESE/preview?rm=minimal" target="_blank">Vehicle Maintenance</a>
         <a href="https://docs.google.com/spreadsheets/d/1nZvQOplnru5hUCy4VRmm7bVHOwuJyzvV4CD3DyDGmO0/preview?rm=minimal" target="_blank">Trailer Locator</a> 
         <a href="https://docs.google.com/spreadsheets/d/1tDW99JVE3BA7tKytZJGXA8EmkFDK1JHpiemg_Azxm6Q/preview?rm=minimal" target="_blank">Holiday Planner</a>
@@ -102,6 +102,27 @@
         <div id="driverList" class="drop-container">
             <div class="driver-row"><a href="tel:07701238571" class="driver-name">Andy West</a><a href="https://wa.me/447701238571" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
             <div class="driver-row"><a href="tel:07890536159" class="driver-name">Barrie Ashmore</a><a href="https://wa.me/447890536159" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07701238573" class="driver-name">Callum Lee</a><a href="https://wa.me/447701238573" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07572124094" class="driver-name">Dean Young</a><a href="https://wa.me/447572124094" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07701238567" class="driver-name">Ian Bason</a><a href="https://wa.me/447701238567" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:01623655583" class="driver-name">Jan Zackl</a><a href="https://wa.me/4471623655583" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07306256854" class="driver-name">John Hulbert</a><a href="https://wa.me/447306256854" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07701238574" class="driver-name">Josh Harrison</a><a href="https://wa.me/447701238574" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07701238577" class="driver-name">Lee Woodcock</a><a href="https://wa.me/447701238577" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07701238576" class="driver-name">Marc Wickham</a><a href="https://wa.me/447701238576" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07481306987" class="driver-name">Martin Basford</a><a href="https://wa.me/447481306987" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07359043679" class="driver-name">Michael Moss</a><a href="https://wa.me/447359043679" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:01623655583" class="driver-name">Neil Woods</a><a href="https://wa.me/441623655583" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07701238572" class="driver-name">Rhys Hill</a><a href="https://wa.me/447701238572" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07746509636" class="driver-name">Ricardo Morais</a><a href="https://wa.me/447746509636" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07762976759" class="driver-name">Richard Dickens</a><a href="https://wa.me/447762976759" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07961662346" class="driver-name">Richard Robinson</a><a href="https://wa.me/447961662346" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07701238570" class="driver-name">Richard Spence</a><a href="https://wa.me/447701238570" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07462886859" class="driver-name">Roy Taylor</a><a href="https://wa.me/447462886859" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07701238575" class="driver-name">Stuart Sleigh</a><a href="https://wa.me/447701238575" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07546702780" class="driver-name">Svajunas Butnorius</a><a href="https://wa.me/447546702780" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07701238568" class="driver-name">Thomas Broomhead</a><a href="https://wa.me/447701238568" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
+            <div class="driver-row"><a href="tel:07759926814" class="driver-name">Tsz Chung Cheung</a><a href="https://wa.me/44759926814" class="wa-side-btn"><i class="fa-brands fa-whatsapp"></i></a></div>
         </div>
         <div onclick="closeNav()" style="padding: 20px; color: white; cursor: pointer; text-align: center; text-decoration: underline; font-size: 13px;">✕ Close Menu</div>
     </div>
@@ -122,7 +143,7 @@
             <span id="liveStatus" style="font-size: 10px; color: #4ade80;">ONLINE</span>
         </div>
         <div id="plannerQuoteList">
-            <div id="loadingMsg" style="grid-column: 1/-1; text-align:center; padding:50px;">SYNCING...</div>
+            <div id="loadingMsg" style="grid-column: 1/-1; text-align:center; padding:50px; font-weight:900;">SYNCING WITH SUPABASE...</div>
         </div>
     </div>
 
@@ -130,6 +151,7 @@
         const _URL = "https://tdrzytgiqvdulityqttr.supabase.co";
         const _KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InRkcnp5dGdpcXZkdWxpdHlxdHRyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzMxNTM5NTMsImV4cCI6MjA4ODcyOTk1M30.XN46i7u6STD-2afmN7-Jh1MltADGpEuWlLt_n7wknbA";
         const sb = supabase.createClient(_URL, _KEY);
+        let audioEnabled = false;
 
         function openNav() { document.getElementById("sideMenu").style.width = "260px"; }
         function closeNav() { document.getElementById("sideMenu").style.width = "0"; }
@@ -138,6 +160,7 @@
             d.style.display = (d.style.display === "block") ? "none" : "block";
         }
 
+        function enableAudio() { audioEnabled = true; }
         function copyAddress(e, text) { e.stopPropagation(); navigator.clipboard.writeText(text); alert("Address Copied!"); }
 
         function acknowledgeCard(e, btn) {
@@ -146,12 +169,10 @@
             btn.style.display = 'none';
         }
 
-        // UPDATED DELETE: Actually just sets a "deleted" flag in your head
-        // (In a real app, you'd add a column 'is_deleted' to Supabase, but for now we'll simulate it)
         async function archiveQuote(e, quoteId) {
             e.stopPropagation();
             if (confirm("Move this quote to History?")) {
-                const { error } = await sb.from('quotes').update({ vehicle_type: 'DELETED' }).eq('id', quoteId);
+                const { error } = await sb.from('quotes').update({ reference: 'ARCHIVED' }).eq('id', quoteId);
                 if (error) alert("Error: " + error.message);
                 else document.querySelector(`[data-id="${quoteId}"]`).remove();
             }
@@ -159,15 +180,17 @@
 
         async function openHistory() {
             document.getElementById('historyOverlay').style.display = 'block';
-            const { data } = await sb.from('quotes').select('*').eq('vehicle_type', 'DELETED').order('created_at', { ascending: false });
+            const { data } = await sb.from('quotes').select('*').eq('reference', 'ARCHIVED').order('created_at', { ascending: false });
             const list = document.getElementById('historyList');
-            list.innerHTML = data.length ? '' : '<p>No deleted quotes found.</p>';
-            data.forEach(q => {
+            list.innerHTML = data && data.length ? '' : '<p style="text-align:center; grid-column:1/-1;">No archived quotes found.</p>';
+            if(data) data.forEach(q => {
                 const card = document.createElement('div');
                 card.className = 'quote-card';
                 card.style.borderLeft = "6px solid #94a3b8";
-                card.innerHTML = `<h4 style="margin:0">${q.customer_name}</h4><p style="font-size:11px;">${q.pickup} -> ${q.delivery}</p>
-                <button onclick="restoreQuote('${q.id}')" style="font-size:10px; cursor:pointer;">RESTORE TO FEED</button>`;
+                card.innerHTML = `
+                    <h4 style="margin:0">${q.customer_name}</h4>
+                    <p style="font-size:11px; margin:5px 0;">${q.pickup} <i class="fa-solid fa-arrow-right"></i> ${q.delivery}</p>
+                    <button onclick="restoreQuote('${q.id}')" style="font-size:10px; cursor:pointer; background:#eee; border:1px solid #ccc; padding:5px; border-radius:4px; width:100%;">RESTORE TO MAIN FEED</button>`;
                 list.appendChild(card);
             });
             closeNav();
@@ -176,15 +199,16 @@
         function closeHistory() { document.getElementById('historyOverlay').style.display = 'none'; }
 
         async function restoreQuote(id) {
-            await sb.from('quotes').update({ vehicle_type: 'Van' }).eq('id', id);
+            await sb.from('quotes').update({ reference: '' }).eq('id', id);
             alert("Quote Restored!");
-            location.reload(); // Quickest way to refresh both views
+            location.reload(); 
         }
 
         function renderQuote(quote, isNew = false) {
-            if (quote.vehicle_type === 'DELETED') return; // Don't show deleted ones in main feed
+            if (quote.reference === 'ARCHIVED') return; 
             const list = document.getElementById('plannerQuoteList');
             if (document.getElementById('loadingMsg')) document.getElementById('loadingMsg').remove();
+            if (document.querySelector(`[data-id="${quote.id}"]`)) return;
 
             const card = document.createElement('div');
             card.className = `quote-card ${isNew ? 'new-entry' : ''}`;
@@ -208,22 +232,31 @@
                     <span style="font-size:16px; font-weight:900;">£${price}</span>
                 </div>
                 <div class="card-details">
-                    <span class="job-label">Collection</span><p class="job-text">${quote.pickup}</p>
-                    <span class="job-label">Delivery</span><p class="job-text">${quote.delivery}</p>
-                    <button class="delete-btn" onclick="archiveQuote(event, '${quote.id}')">MOVE TO HISTORY</button>
+                    <span class="job-label">Collection Point</span><p class="job-text">${quote.pickup}</p>
+                    <span class="job-label">Delivery Point</span><p class="job-text">${quote.delivery}</p>
+                    <button class="delete-btn" onclick="archiveQuote(event, '${quote.id}')"><i class="fa-solid fa-trash-can"></i> MOVE TO HISTORY</button>
                 </div>`;
             
             list.insertBefore(card, list.firstChild);
+            
             if(isNew) {
-                const alert = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
-                alert.play().catch(e=>{});
+                const alertSnd = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+                alertSnd.volume = 1.0;
+                alertSnd.play().catch(e => console.log("Sound blocked: Click the page once."));
             }
         }
 
         async function initLiveFeed() {
-            const { data } = await sb.from('quotes').select('*').order('created_at', { ascending: false }).limit(50);
-            if (data) data.reverse().forEach(q => renderQuote(q, false));
-            sb.channel('realtime-quotes').on('postgres_changes', { event: '*', schema: 'public', table: 'quotes' }, () => location.reload()).subscribe();
+            try {
+                const { data } = await sb.from('quotes').select('*').neq('reference', 'ARCHIVED').order('created_at', { ascending: false }).limit(40);
+                if (data) data.reverse().forEach(q => renderQuote(q, false));
+                
+                sb.channel('realtime-quotes')
+                .on('postgres_changes', { event: '*', schema: 'public', table: 'quotes' }, (p) => {
+                    if (p.eventType === 'INSERT') renderQuote(p.new, true);
+                    if (p.eventType === 'UPDATE' || p.eventType === 'DELETE') location.reload();
+                }).subscribe();
+            } catch (e) { console.error(e); }
         }
 
         window.onload = initLiveFeed;
